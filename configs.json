@@ -1,0 +1,17 @@
+{
+  "experiment_name": "Template Project",
+  "optimizer": "adam",
+  "num_epochs": 10,
+  "learning_rate": 0.001,
+  "momentum": 0.1,
+  "weight_decay": 1e-5,
+  "batch_size": 32,
+  "model_name": "Resnet50",
+  "data_path": {
+    "root": "/data",
+    "train": null,
+    "validation": null,
+    "test": null
+  },
+  "model_save_path": "./trained_models/"
+}
