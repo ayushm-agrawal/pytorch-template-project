@@ -6,6 +6,8 @@ class Helpers:
         self.configs = configs
 
     def load_optimizer(self):
+        # TODO: check if the model was previously loaded
+
         optimizer = self.configs.optimizer
         match optimizer:
             case "adam":
@@ -14,3 +16,13 @@ class Helpers:
                 pass
 
         raise NotImplementedError("Load Optimizer hasn't been implemented yet!")
+
+    def load_criterion(self):
+        raise NotImplementedError("Load Criterion hasn't been implemented yet!")
+
+    def load_data_loaders(self):
+        raise NotImplementedError("Load DataLoader hasn't been implemented yet!")
+
+    def load_model(self):
+        raise NotImplementedError("Load DataLoader hasn't been implemented yet!")
+
