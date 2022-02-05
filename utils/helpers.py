@@ -1,5 +1,8 @@
 import os
 from types import SimpleNamespace
+from typing import Optional
+
+import torch
 from torch import nn, optim
 from torchvision.datasets import CIFAR10
 
@@ -25,22 +28,23 @@ class Helpers:
         """Inits Helpers class with configs"""
         self.configs = configs
 
-    def load_optimizer(self) -> None:
+    def load_optimizer(self) -> torch.optim.Optimizer:
         """
         Method loads respective Optimizer using the passed configs value
 
-        Returns: None
+        Returns:
+            (:class:~`torch.optim.optimizer`) Optimizer object
 
         Examples:
             Initiate the class and call the methods
 
             >>> helpers = Helpers(self.configs)
-            >>> helpers.load_optimizer()
+            >>> optimize =  helpers.load_optimizer()
         """
 
         # Load the model if it wasn't loaded
         if not isinstance(self.configs.model_name, nn.Module):
-            self.load_model()
+            self.configs.model_name = self.load_model()
 
         optimizer_name: str = str(self.configs.optimizer).lower()
         optimizer = None
@@ -59,19 +63,20 @@ class Helpers:
             )
         # Add your required optimizer values in the elif statements
 
-        self.configs.optimizer = optimizer
+        return optimizer
 
-    def load_criterion(self) -> None:
+    def load_criterion(self) -> Optional[nn.Module]:
         """
         Loads the criterion object from the `configs.criterion` attribute
 
-        Returns: None
+        Returns:
+            (:class:`~torch.nn.modules.loss`): Specific Loss object based on the Criterion name
 
         Examples:
             Initiate the class and call the methods
 
             >>> helpers = Helpers(self.configs)
-            >>> helpers.load_criterion()
+            >>> _criterion = helpers.load_criterion()
         """
 
         criterion_name: str = str(self.configs.criterion).lower()
@@ -82,37 +87,36 @@ class Helpers:
 
         # Add additional criterion in the elif statements
 
-        self.configs.criterion = criterion
+        return criterion
 
-    def create_data_loaders(self) -> None:
+    def create_data_loaders(self) -> dict:
         """
         Creates :class:`~torch.utils.data.DataLoader` Object for Train, Validation and Test data
 
         Returns:
-            :class:`~torch.utils.data.DataLoader` objects for train and test datasets
+            (dict): Dictionary of :class:`~torch.utils.data.DataLoader` Objects for train, test and validation
 
         Examples:
 
             >>> helpers = Helpers()
-            >>> helpers.create_data_loaders()
+            >>> data = helpers.create_data_loaders()
         """
 
         # update this line for your own transformation function
         train_transform, test_transform = cifar10_transforms()
 
-        if self.configs.data["train"] is None:
-            self.configs.data["train"] = os.path.join(self.configs.data["root"], "train")
-
+        self.configs.data["train"] = "train" if self.configs.data["train"] is None else self.configs.data["train"]
+        self.configs.data["test"] = "test" if self.configs.data["test"] is None else self.configs.data["test"]
         if self.configs.data["validation"] is None:
-            self.configs.data["validation"] = os.path.join(self.configs.data["root"], "validation")
+            self.configs.data["validation"] = "validation"
 
-        if self.configs.data["test"] is None:
-            self.configs.data["test"] = os.path.join(self.configs.data["root"], "test")
+        train_path = os.path.join(self.configs.data["root"], self.configs.data["train"])
+        test_path = os.path.join(self.configs.data["root"], self.configs.data["test"])
 
         # load datasets, downloading if needed
-        train_set = CIFAR10(self.configs.data["train"], train=True, download=True,
+        train_set = CIFAR10(train_path, train=True, download=True,
                             transform=train_transform)
-        test_set = CIFAR10(self.configs.data["test"], train=False, download=True,
+        test_set = CIFAR10(test_path, train=False, download=True,
                            transform=test_transform)
 
         train_loader = DataLoader(train_set,
@@ -122,9 +126,9 @@ class Helpers:
                                  batch_size=self.configs.batch_size,
                                  num_workers=0)
 
-        self.configs.data = dict({"train_loader": train_loader, "test_loader": test_loader})
+        return dict({"train_loader": train_loader, "test_loader": test_loader})
 
-    def load_model(self) -> None:
+    def load_model(self) -> nn.Module:
         """
         Loads model object for the `configs.model_name` attribute
 
@@ -150,4 +154,4 @@ class Helpers:
             # import the model in this file and add your models in the elif statement
             # similar to the example model here
 
-            self.configs.model_name = model
+            return model

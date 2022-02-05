@@ -1,16 +1,14 @@
-import os.path
-
-import pytest
 import json
-import shutil
+import os.path
 from types import SimpleNamespace
 
-import torch.optim
+import pytest
 import torch.nn as nn
+import torch.optim
+from torch.utils.data import DataLoader
 
 import models.alexnet
 from utils.helpers import Helpers
-from torch.utils.data import DataLoader
 
 
 @pytest.fixture
@@ -26,24 +24,21 @@ def test_load_optimizer(configs):
     assert isinstance(configs.optimizer, str)
     assert isinstance(configs.model_name, str)
     # testing for adam
-    helpers.load_optimizer()
-    assert isinstance(configs.model_name, nn.Module)
-    assert isinstance(configs.optimizer, torch.optim.Adam)
+    optimizer = helpers.load_optimizer()
+    assert isinstance(optimizer, torch.optim.Adam)
 
     # testing for sgd
     configs.optimizer = "sgd"
-    helpers.load_optimizer()
-    assert isinstance(configs.model_name, nn.Module)
-    assert isinstance(configs.optimizer, torch.optim.SGD)
+    optimizer = helpers.load_optimizer()
+    assert isinstance(optimizer, torch.optim.SGD)
 
 
 def test_load_model(configs):
     helpers = Helpers(configs)
     assert isinstance(configs.model_name, str)
 
-    helpers.load_model()
-    print(configs.model_name.__class__)
-    assert isinstance(configs.model_name, models.alexnet.AlexNet)
+    model = helpers.load_model()
+    assert isinstance(model, models.alexnet.AlexNet)
 
 
 def test_load_criterion(configs):
@@ -51,9 +46,9 @@ def test_load_criterion(configs):
 
     assert isinstance(configs.criterion, str)
 
-    helpers.load_criterion()
+    criterion = helpers.load_criterion()
 
-    assert isinstance(configs.criterion, nn.CrossEntropyLoss)
+    assert isinstance(criterion, nn.CrossEntropyLoss)
 
 
 def test_create_data_loader(configs):
@@ -63,9 +58,8 @@ def test_create_data_loader(configs):
     assert configs.data['test'] is None
     assert configs.data['validation'] is None
 
-    helpers.create_data_loaders()
+    data = helpers.create_data_loaders()
 
-    assert isinstance(configs.data, dict)
-    assert isinstance(configs.data['train_loader'], DataLoader)
-    assert isinstance(configs.data['test_loader'], DataLoader)
-
+    assert isinstance(data, dict)
+    assert isinstance(data['train_loader'], DataLoader)
+    assert isinstance(data['test_loader'], DataLoader)

@@ -7,7 +7,7 @@
   "num_classes": 10,
   "input_channels": 3,
   "learning_rate": 0.001,
-  "momentum": 0.1,
+  "momentum": 0.9,
   "weight_decay": 1e-5,
   "batch_size": 32,
   "data": {
