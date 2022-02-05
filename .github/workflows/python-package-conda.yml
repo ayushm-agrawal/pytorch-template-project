@@ -30,4 +30,5 @@ jobs:
           coverage run -m pytest
           rm coverage.svg
           coverage-badge -o coverage.svg
+          rm .coverage
           rm -rf test/data/

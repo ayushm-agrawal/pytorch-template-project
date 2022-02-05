@@ -20,7 +20,7 @@ def load_configs(path: str = "./configs.json") -> SimpleNamespace:
         if attribute == "criterion":
             configs.criterion = helpers.load_criterion()
         if attribute == "data_path":
-            configs.data_path = helpers.load_data_loaders()
+            configs.data_path = helpers.create_data_loaders()
         if attribute == "model_name":
             configs.data_path = helpers.load_model()
 
