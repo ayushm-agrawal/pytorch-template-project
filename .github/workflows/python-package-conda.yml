@@ -28,6 +28,6 @@ jobs:
           pip install coverage
           pip install coverage-badge
           coverage run -m pytest
-          coverage-badge -o coverage.svg
           rm coverage.svg
+          coverage-badge -o coverage.svg
           rm -rf test/data/
