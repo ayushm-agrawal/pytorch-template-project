@@ -24,10 +24,10 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test with pytest
         run: |
-          conda install pytest
-          conda install coverage
-          conda install coverage-badge
-          coverage run -m $CONDA/bin/pytest
+          pip install pytest
+          pip install coverage
+          pip install coverage-badge
+          coverage run -m xwpytest
           coverage-badge -o coverage.svg
           rm coverage.svg
           rm -rf test/data/
