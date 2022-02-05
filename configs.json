@@ -1,15 +1,17 @@
 {
   "experiment_name": "Template Project",
-  "model_name": "Resnet50",
+  "model_name": "alexnet",
   "optimizer": "adam",
   "criterion": "cross-entropy",
   "num_epochs": 10,
+  "num_classes": 10,
+  "input_channels": 3,
   "learning_rate": 0.001,
   "momentum": 0.1,
   "weight_decay": 1e-5,
   "batch_size": 32,
-  "data_path": {
-    "root": "/data",
+  "data": {
+    "root": "./data",
     "train": null,
     "validation": null,
     "test": null
