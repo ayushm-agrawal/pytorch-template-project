@@ -27,7 +27,7 @@ jobs:
           pip install pytest
           pip install coverage
           pip install coverage-badge
-          coverage run -m xwpytest
+          coverage run -m pytest
           coverage-badge -o coverage.svg
           rm coverage.svg
           rm -rf test/data/
